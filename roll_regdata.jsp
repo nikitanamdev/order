@@ -22,6 +22,7 @@ try
   Class.forName("oracle.jdbc.OracleDriver");
   Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","HARRYPOTTER","oracle123");
   int cid=1;
+  int contact=0;
   session=request.getSession();
   String user = request.getParameter("username");
   String pwd = request.getParameter("password");
@@ -29,7 +30,6 @@ try
   String nuser = request.getParameter("usernamesignup");
   String add=request.getParameter("address");
   String email = request.getParameter("emailsignup");
-  long contact = Integer.parseInt(request.getParameter("contact"));
   String pwd2 = request.getParameter("password2");
   String cpwd = request.getParameter("password_confirm");
   Statement stat = con.createStatement();
@@ -37,7 +37,11 @@ try
   Statement stat2 = con.createStatement();
   if(user==null)
   {
-	  if(pwd2 != cpwd)
+	  if(!request.getParameter("contact").equals(null))
+	  {
+		  contact = Integer.parseInt(request.getParameter("contact"));
+	  }
+	  if(!pwd2.equals(cpwd))
 	  { %><script type="text/javascript">
 		  alert("Password not match!");
 		  </script><%}
@@ -61,7 +65,7 @@ try
   }
   else
   {
-	  rs=stat1.executeQuery("select * from Customer");
+	  rs=stat1.executeQuery("select * from Customer where c_name='"+user+"' and Password='"+pwd+"'");
 	  if(rs.next())
 	  {
 		  if(pwd.equals(rs.getString(6)))
